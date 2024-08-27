@@ -1,52 +1,69 @@
-data class Llamada(val tipo: TipoLlamada, val duracion: Int)
 
-enum class TipoLlamada(val costoPorMinuto: Int) {
-    LOCAL(50),
-    LARGA_DISTANCIA(350),
-    CELULAR(150)
+enum class TipoLlamada {
+    LOCAL, CELULAR, LARGA_DISTANCIA
 }
 
 class Cabina {
-    private val llamadas = mutableListOf<Llamada>()
-    var numeroLlamadas: Int = 0
-        private set
-    var duracionTotal: Int = 0
-        private set
-    var costoTotal: Int = 0
-        private set
+    private var llamadasLocales = 0
+    private var llamadasCelulares = 0
+    private var llamadasLargaDistancia = 0
+    private var totalMinutos = 0
 
-    fun registrarLlamada(tipo: TipoLlamada, duracion: Int) {
-        val llamada = Llamada(tipo, duracion)
-        llamadas.add(llamada)
-        numeroLlamadas++
-        duracionTotal += duracion
-        costoTotal += tipo.costoPorMinuto * duracion
+    fun registrarLlamada(tipo: TipoLlamada, minutos: Int) {
+        when (tipo) {
+            TipoLlamada.LOCAL -> llamadasLocales++
+            TipoLlamada.CELULAR -> llamadasCelulares++
+            TipoLlamada.LARGA_DISTANCIA -> llamadasLargaDistancia++
+        }
+        totalMinutos += minutos
     }
 
     fun mostrarInformacionCabina() {
-        println("Número de llamadas realizadas: $numeroLlamadas")
-        println("Duración total de las llamadas: $duracionTotal minutos")
-        println("Costo total de las llamadas: $costoTotal pesos")
+        println("Llamadas locales: $llamadasLocales")
+        println("Llamadas celulares: $llamadasCelulares")
+        println("Llamadas larga distancia: $llamadasLargaDistancia")
+        println("Total minutos: $totalMinutos")
     }
 
     fun reiniciarCabina() {
-        llamadas.clear()
-        numeroLlamadas = 0
-        duracionTotal = 0
-        costoTotal = 0
+        llamadasLocales = 0
+        llamadasCelulares = 0
+        llamadasLargaDistancia = 0
+        totalMinutos = 0
     }
+    fun obtenerLlamadasLocales(): Int = llamadasLocales
+    fun obtenerLlamadasCelulares(): Int = llamadasCelulares
+    fun obtenerLlamadasLargaDistancia(): Int = llamadasLargaDistancia
+    fun obtenerTotalMinutos(): Int = totalMinutos
 }
 
 class Empresa(private val cabinas: List<Cabina>) {
     fun mostrarConsolidadoTotal() {
-        val totalLlamadas = cabinas.sumOf { it.numeroLlamadas }
-        val totalDuracion = cabinas.sumOf { it.duracionTotal }
-        val totalCosto = cabinas.sumOf { it.costoTotal }
-        val costoPromedioPorMinuto = if (totalDuracion > 0) totalCosto / totalDuracion else 0
+        var totalLlamadasLocales = 0
+        var totalLlamadasCelulares = 0
+        var totalLlamadasLargaDistancia = 0
+        var totalMinutos = 0
 
-        println("Número total de llamadas realizadas: $totalLlamadas")
-        println("Duración total de las llamadas: $totalDuracion minutos")
-        println("Costo total de las llamadas: $totalCosto pesos")
-        println("Costo promedio por minuto: $costoPromedioPorMinuto pesos")
+        println("\nConsolidado total de la empresa:")
+        println("================================")
+
+        cabinas.forEachIndexed { index, cabina ->
+            println("\nCabina ${index + 1}:")
+            println("-------------")
+            cabina.mostrarInformacionCabina()
+
+            totalLlamadasLocales += cabina.obtenerLlamadasLocales()
+            totalLlamadasCelulares += cabina.obtenerLlamadasCelulares()
+            totalLlamadasLargaDistancia += cabina.obtenerLlamadasLargaDistancia()
+            totalMinutos += cabina.obtenerTotalMinutos()
+        }
+
+        println("\nResumen total:")
+        println("--------------")
+        println("Total de llamadas locales: $totalLlamadasLocales")
+        println("Total de llamadas celulares: $totalLlamadasCelulares")
+        println("Total de llamadas larga distancia: $totalLlamadasLargaDistancia")
+        println("Total de llamadas: ${totalLlamadasLocales + totalLlamadasCelulares + totalLlamadasLargaDistancia}")
+        println("Total de minutos: $totalMinutos")
     }
 }
