@@ -19,6 +19,7 @@ fun main() {
     val cabinas = mutableListOf<Cabina>()
     var opcion: Int
 
+    //creando el menu
     do {
         println("\n1. Crear nueva cabina")
         println("2. Registrar llamada")
@@ -29,12 +30,16 @@ fun main() {
         print("Seleccione una opción: ")
 
         opcion = readLine()?.toIntOrNull() ?: -1
-
+  //logica del menu
         when (opcion) {
+
+            //añadir a la lista una cabina
             1 -> {
                 cabinas.add(Cabina())
                 println("Nueva cabina creada. Total de cabinas: ${cabinas.size}")
             }
+
+            //registrar una llamada en una de las cabinas de la lista
             2 -> {
                 if (cabinas.isEmpty()) {
                     println("No hay cabinas creadas.")
@@ -46,6 +51,8 @@ fun main() {
                         if (numCabina !in 1..cabinas.size) {
                             println("Número de cabina inválido. Por favor, intente nuevamente.")
                         }
+
+                        //selecionar el tipo de llamada
                     } while (numCabina !in 1..cabinas.size)
 
                     var tipoLlamada: TipoLlamada
@@ -55,6 +62,7 @@ fun main() {
                         println("2. CELULAR")
                         println("3. LARGA_DISTANCIA")
                         print("Ingrese el número o el nombre del tipo de llamada: ")
+                        //para convertir de minusculas a mayusculas
                         val input = readLine()?.toUpperCase() ?: ""
                         tipoLlamada = when (input) {
                             "1", "LOCAL" -> TipoLlamada.LOCAL
@@ -66,6 +74,7 @@ fun main() {
                             }
                         }
                         break
+                        //pide la duracion de su llamada
                     } while (true)
 
                     print("Duración en minutos: ")
@@ -74,6 +83,7 @@ fun main() {
                     println("Llamada registrada.")
                 }
             }
+            //info de la llamada en cabina
             3 -> {
                 if (cabinas.isEmpty()) {
                     println("No hay cabinas creadas.")
@@ -91,6 +101,8 @@ fun main() {
                 val empresa = Empresa(cabinas)
                 empresa.mostrarConsolidadoTotal()
             }
+
+            //info de la llamada de todas las cabinas
             5 -> {
                 if (cabinas.isEmpty()) {
                     println("No hay cabinas creadas.")

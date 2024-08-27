@@ -1,14 +1,14 @@
-
+//almacena datos de los tipos de llamda
 enum class TipoLlamada {
     LOCAL, CELULAR, LARGA_DISTANCIA
 }
-
+//logica de la cabina
 class Cabina {
     private var llamadasLocales = 0
     private var llamadasCelulares = 0
     private var llamadasLargaDistancia = 0
     private var totalMinutos = 0
-
+//timer de la llamada
     fun registrarLlamada(tipo: TipoLlamada, minutos: Int) {
         when (tipo) {
             TipoLlamada.LOCAL -> llamadasLocales++
